@@ -6,7 +6,7 @@ There is no payment gateway. Shoppers build an enquiry list, send their details,
 
 ## Live site
 
-GitHub Pages: https://dn-ship-it.github.io/giftwale/
+GitHub Pages: https://dhanashreee194.github.io/giftwale/
 
 ## Run locally
 
