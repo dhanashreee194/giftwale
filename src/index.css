@@ -1259,6 +1259,12 @@ main { padding-top: 78px; }
   border-radius: 24px;
   padding: 40px 32px;
   box-shadow: var(--shadow);
+  color: var(--ink);
+}
+
+.form-card h1,
+.form-card h2 {
+  color: var(--navy);
 }
 
 .form-grid {
