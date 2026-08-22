@@ -30,55 +30,24 @@ export const COPY = {
     "Discover handcrafted gift collections perfect for birthdays, weddings, and corporate occasions.",
 };
 
-export const SLIDES = [
-  {
-    id: "welcome",
-    stamp: "01",
-    kicker: "Storefront window",
-    title: "Celebrate every moment with the perfect gift",
-    text: COPY.elegant,
-    image: img("asset-16.png"),
-    href: "/shop",
-    action: "Browse the gifts",
-  },
-  {
-    id: "birthday",
-    stamp: "02",
-    kicker: "Birthday collection",
-    title: "A box that feels like the party started early",
-    text: COPY.handcrafted,
-    image: img("asset-10.jpg"),
-    href: "/shop?cat=birthday",
-    action: "Open birthday gifts",
-  },
-  {
-    id: "wedding",
-    stamp: "03",
-    kicker: "Wedding & return",
-    title: "Favours guests keep, not toss",
-    text: COPY.curated,
-    image: img("asset-13.png"),
-    href: "/shop?cat=wedding",
-    action: "See wedding pieces",
-  },
-  {
-    id: "corporate",
-    stamp: "04",
-    kicker: "Desk & wholesale",
-    title: "Branded sets, Moq 30, confirmed by phone",
-    text: COPY.elegant,
-    image: img("asset-02.png"),
-    href: "/shop?cat=corporate",
-    action: "Ask for a corporate set",
-  },
+export const CATEGORIES = [
+  { id: "birthday", label: "Birthday Gift", title: "Birthday Gift", image: img("asset-10.jpg"), tone: "teal" },
+  { id: "wedding", label: "Wedding Gift", title: "Wedding Gift", image: img("asset-13.png"), tone: "navy" },
+  { id: "return", label: "Return Gift", title: "Return Gift", image: img("asset-12.png"), tone: "amber" },
+  { id: "corporate", label: "Corporate Gift", title: "Corporate Gift", image: img("asset-02.png"), tone: "gold" },
 ];
 
-export const CATEGORIES = [
-  { id: "birthday", label: "Birthday Gift" },
-  { id: "wedding", label: "Wedding Gift" },
-  { id: "return", label: "Return Gift" },
-  { id: "corporate", label: "Corporate Gift" },
+export const SEARCH_HINTS = [
+  { label: "Birthday Gift", q: "birthday" },
+  { label: "Wedding Gift", q: "wedding" },
+  { label: "Return Gift", q: "return" },
+  { label: "Corporate Gift", q: "corporate" },
+  { label: "Personalized", q: "personalized" },
 ];
+
+export function tileSize(index) {
+  return ["lg", "sm", "md", "sm", "lg", "md"][index % 6];
+}
 
 export const SERVICES = [
   {

@@ -1,13 +1,15 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { BRAND } from "./data";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { BRAND, CATEGORIES, SEARCH_HINTS } from "./data";
 import { useEnquiry } from "./enquiry";
-import { HeaderSlider } from "./slider";
 
-export function Logo() {
+export function Logo({ compact = false }) {
   return (
-    <Link to="/" className="brand">
-      <img src={`${import.meta.env.BASE_URL}images/asset-15.png`} alt="Giftwale logo" />
+    <Link to="/" className={`brand ${compact ? "is-compact" : ""}`}>
+      <span className="brand-mark">
+        <img src={`${import.meta.env.BASE_URL}images/asset-15.png`} alt="Giftwale logo" />
+      </span>
       <div className="brand-copy">
         <strong>{BRAND.name}</strong>
         <span>{BRAND.tagline}</span>
@@ -18,173 +20,272 @@ export function Logo() {
 
 export function Header() {
   const { count, setOpen } = useEnquiry();
+  const [scrolled, setScrolled] = useState(false);
   const [menu, setMenu] = useState(false);
+  const [search, setSearch] = useState(false);
+  const location = useLocation();
+  const overHero = location.pathname === "/" && !scrolled;
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 28);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenu(false);
+    setSearch(false);
+  }, [location.pathname]);
 
   return (
-    <header className="site-header">
-      <div className="mast">
-      <div className="wrap">
-        <div className="utility">
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/about">About Us</NavLink>
-          <NavLink to="/enquiry">ENQUIRY NOW</NavLink>
-          <NavLink to="/contact">contact us</NavLink>
-        </div>
-        <div className="header-row">
-          <Logo />
+    <>
+      <header className={`mast ${scrolled ? "is-scrolled" : ""} ${overHero ? "is-over" : ""}`}>
+        <span className="mast-ribbon" aria-hidden />
+        <span className="mast-bow" aria-hidden />
+        <div className="wrap mast-row">
+          <Logo compact={scrolled} />
           <nav className="nav">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/shop">Gifts</NavLink>
-            <NavLink to="/about">About Us</NavLink>
-            <NavLink to="/contact">Contact Us</NavLink>
+            <NavLink to="/" end data-cursor="nav">Home</NavLink>
+            <NavLink to="/shop" data-cursor="nav">Shop</NavLink>
+            <NavLink to="/about" data-cursor="nav">About Us</NavLink>
+            <NavLink to="/contact" data-cursor="nav">Contact Us</NavLink>
           </nav>
-          <div className="header-actions">
-            <button className="icon-btn menu-toggle" onClick={() => setMenu((v) => !v)} aria-label="Menu">
-              ☰
+          <div className="mast-actions">
+            <button type="button" className="icon-quiet" data-cursor="nav" onClick={() => setSearch(true)} aria-label="Search">
+              Search
             </button>
-            <button className="icon-btn" onClick={() => setOpen(true)} aria-label="Enquiry list">
-              ✉
-              {count > 0 && <span className="count">{count}</span>}
+            <button type="button" className="icon-quiet menu-toggle" data-cursor="nav" onClick={() => setMenu((v) => !v)} aria-label="Menu">
+              Menu
             </button>
-            <Link className="enquiry-pill" to="/enquiry">
-              Enquiry
-            </Link>
+            <button type="button" className="btn" data-cursor="bag" onClick={() => setOpen(true)}>
+              ENQUIRY NOW{count > 0 ? ` · ${count}` : ""}
+            </button>
           </div>
         </div>
         {menu && (
-          <div className="mobile-nav">
-            <NavLink to="/" onClick={() => setMenu(false)}>Home</NavLink>
-            <NavLink to="/shop" onClick={() => setMenu(false)}>Gifts</NavLink>
+          <div className="mobile-nav wrap">
+            <NavLink to="/" end onClick={() => setMenu(false)}>Home</NavLink>
+            <NavLink to="/shop" onClick={() => setMenu(false)}>Shop</NavLink>
             <NavLink to="/about" onClick={() => setMenu(false)}>About Us</NavLink>
-            <NavLink to="/enquiry" onClick={() => setMenu(false)}>ENQUIRY NOW</NavLink>
             <NavLink to="/contact" onClick={() => setMenu(false)}>Contact Us</NavLink>
+            <NavLink to="/enquiry" onClick={() => setMenu(false)}>ENQUIRY NOW</NavLink>
           </div>
         )}
-      </div>
-      </div>
-      <HeaderSlider />
-    </header>
+      </header>
+      <AnimatePresence>{search && <SearchLayer onClose={() => setSearch(false)} />}</AnimatePresence>
+    </>
+  );
+}
+
+function SearchLayer({ onClose }) {
+  const nav = useNavigate();
+  const [q, setQ] = useState("");
+
+  function go(term) {
+    onClose();
+    nav(`/shop?q=${encodeURIComponent(term)}`);
+  }
+
+  return (
+    <motion.div className="search-layer" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <button type="button" className="reveal-dim" onClick={onClose} aria-label="Close search" />
+      <motion.form
+        className="search-panel"
+        initial={{ y: 24, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 16, opacity: 0 }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          go(q);
+        }}
+      >
+        <p className="eyebrow">Shop</p>
+        <input
+          autoFocus
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Birthday Gift, Corporate Gift…"
+        />
+        <div className="search-hints">
+          {SEARCH_HINTS.map((hint) => (
+            <button type="button" key={hint.q} data-cursor="category" onClick={() => go(hint.q)}>
+              {hint.label}
+            </button>
+          ))}
+        </div>
+      </motion.form>
+    </motion.div>
   );
 }
 
 export function Footer() {
   return (
     <footer className="site-footer">
+      <div className="footer-ribbon" aria-hidden />
       <div className="wrap footer-grid">
         <div>
           <Logo />
-          <p style={{ maxWidth: "42ch", color: "#cfc6b6" }}>
-            Elegant personalized gifting solutions designed with luxury, love, and timeless style.
-          </p>
+          <p>{BRAND.slogan}</p>
         </div>
         <div>
-          <h4>Visit</h4>
-          <p><Link to="/">Home</Link></p>
+          <p className="eyebrow">Shop</p>
+          <p><Link to="/shop?cat=birthday">Birthday Gift</Link></p>
+          <p><Link to="/shop?cat=wedding">Wedding Gift</Link></p>
+          <p><Link to="/shop?cat=return">Return Gift</Link></p>
+          <p><Link to="/shop?cat=corporate">Corporate Gift</Link></p>
+        </div>
+        <div>
+          <p className="eyebrow">Talk to us</p>
+          <p>Call {BRAND.phoneDisplay}</p>
+          <p>{BRAND.email}</p>
+          <p>Wholesale Moq:{BRAND.moq}</p>
           <p><Link to="/about">About Us</Link></p>
           <p><Link to="/contact">Contact Us</Link></p>
         </div>
-        <div>
-          <h4>Talk to us</h4>
-          <p>Call Now: {BRAND.phoneDisplay}</p>
-          <p>Email Id - {BRAND.email}</p>
-          <p>Moq:{BRAND.moq} for wholesale bulk orders</p>
-        </div>
       </div>
-      <div className="wrap legal">
-        <Link to="/privacy">Privacy Policy</Link>
-        <Link to="/terms">Terms & condition</Link>
+      <div className="wrap footer-end">
+        <em>{BRAND.tagline}</em>
+        <div className="legal">
+          <Link to="/privacy">Privacy</Link>
+          <Link to="/terms">Terms</Link>
+        </div>
       </div>
     </footer>
   );
 }
 
-export function ProductCard({ product }) {
-  const { add } = useEnquiry();
-  return (
-    <article className="card">
-      <div className="card-box">
-        <div className="card-lid" aria-hidden>
-          <span />
-        </div>
-        <div className="card-media">
-          <span className="tag">{product.tags[0]}</span>
-          <img src={product.image} alt={product.name} />
-        </div>
-      </div>
-      <div className="card-body">
-        <h3>{product.name}</h3>
-        <p>{product.blurb}</p>
-        <div className="card-actions">
-          <span className="price">On enquiry</span>
-          <button className="enquiry-pill" onClick={() => add(product)}>
-            Enquiry
-          </button>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-export function Tray() {
-  const { items, open, setOpen, update, remove, count } = useEnquiry();
+export function Bag() {
+  const { items, open, setOpen, update, remove, note, count, pulse, clear } = useEnquiry();
   const navigate = useNavigate();
-  if (!open && count === 0) return null;
+  const [fly, setFly] = useState(null);
+  const [toast, setToast] = useState(false);
+
+  useEffect(() => {
+    const onFly = (event) => {
+      const bag = document.querySelector(".gift-bag");
+      const box = bag?.getBoundingClientRect();
+      setFly({
+        image: event.detail.image,
+        fromX: event.detail.x,
+        fromY: event.detail.y,
+        toX: box ? box.left + box.width / 2 : window.innerWidth - 60,
+        toY: box ? box.top + box.height / 2 : window.innerHeight - 60,
+      });
+      window.setTimeout(() => setFly(null), 620);
+    };
+    window.addEventListener("giftwale-fly", onFly);
+    return () => window.removeEventListener("giftwale-fly", onFly);
+  }, []);
+
+  useEffect(() => {
+    if (!pulse) return undefined;
+    setToast(true);
+    const timer = window.setTimeout(() => setToast(false), 1800);
+    return () => window.clearTimeout(timer);
+  }, [pulse]);
+
   return (
     <>
+      {fly && (
+        <img
+          className="fly-gift"
+          src={fly.image}
+          alt=""
+          style={{
+            "--from-x": `${fly.fromX}px`,
+            "--from-y": `${fly.fromY}px`,
+            "--to-x": `${fly.toX}px`,
+            "--to-y": `${fly.toY}px`,
+          }}
+        />
+      )}
+      {toast && <p className="select-toast">Added to enquiry</p>}
+      <button
+        type="button"
+        className={`gift-bag ${pulse ? "is-pulse" : ""}`}
+        data-cursor="bag"
+        onClick={() => setOpen(true)}
+        aria-label="Enquiry"
+      >
+        <i className="bag-ico" aria-hidden />
+        <span>ENQUIRY NOW</span>
+        <b>{count}</b>
+      </button>
       <div className={`backdrop ${open ? "show" : ""}`} onClick={() => setOpen(false)} />
       <aside className={`tray ${open ? "open" : ""}`}>
         <div className="tray-head">
-          <h3>Your enquiry list</h3>
-          <button className="icon-btn" onClick={() => setOpen(false)}>✕</button>
+          <div>
+            <p className="eyebrow">{BRAND.tagline}</p>
+            <h3>ENQUIRY NOW</h3>
+          </div>
+          <button type="button" className="icon-quiet" onClick={() => setOpen(false)}>Close</button>
         </div>
         <div className="tray-items">
-          {items.length === 0 && <p>Add gifts you would like us to prepare. We confirm every order by phone or WhatsApp — no online payment.</p>}
+          {items.length === 0 && (
+            <p>Call Now: {BRAND.phoneDisplay}. Email Id - {BRAND.email}. Moq:{BRAND.moq}</p>
+          )}
           {items.map((item) => (
             <div className="tray-item" key={item.id}>
               <img src={item.image} alt="" />
               <div>
                 <strong>{item.name}</strong>
-                <div>
-                  QTY{" "}
-                  <input
-                    type="number"
-                    min="1"
-                    value={item.qty}
-                    onChange={(e) => update(item.id, Number(e.target.value))}
-                    style={{ width: 64 }}
-                  />
-                </div>
+                <input
+                  type="number"
+                  min="1"
+                  value={item.qty}
+                  onChange={(e) => update(item.id, Number(e.target.value))}
+                />
+                <input
+                  placeholder="Note"
+                  value={item.note || ""}
+                  onChange={(e) => note(item.id, e.target.value)}
+                />
               </div>
-              <button className="ghost" onClick={() => remove(item.id)}>Remove</button>
+              <button type="button" className="btn-ghost" onClick={() => remove(item.id)}>Remove</button>
             </div>
           ))}
         </div>
         <div className="tray-foot">
           <p className="moq">Wholesale Moq:{BRAND.moq}</p>
           <button
-            className="send"
-            style={{ width: "100%" }}
+            type="button"
+            className="btn"
+            disabled={!items.length}
             onClick={() => {
               setOpen(false);
               navigate("/enquiry");
             }}
           >
-            Send enquiry
+            ENQUIRY NOW
           </button>
+          {items.length > 0 && (
+            <button type="button" className="btn-ghost" onClick={clear}>Clear</button>
+          )}
         </div>
       </aside>
     </>
   );
 }
 
-export function Unwrap() {
-  const [gone, setGone] = useState(false);
-  if (gone) return null;
+export function CategoryPicker({ cat, onChange }) {
+  const chips = [
+    { id: "all", title: "Shop", label: "Shop", tone: "navy", image: `${import.meta.env.BASE_URL}images/asset-16.png` },
+    ...CATEGORIES,
+  ];
   return (
-    <div className="unwrap" onAnimationEnd={() => setGone(true)}>
-      <div className="unwrap-panel" />
-      <div className="ribbon" />
-      <div className="bow" />
+    <div className="shop-filters">
+      {chips.map((item) => (
+        <button
+          type="button"
+          key={item.id}
+          data-cursor="category"
+          className={cat === item.id ? "is-on" : ""}
+          onClick={() => onChange(item.id)}
+        >
+          {item.label || item.title}
+        </button>
+      ))}
     </div>
   );
 }

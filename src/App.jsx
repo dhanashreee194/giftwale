@@ -1,15 +1,16 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { GiftCursor } from "./cursor";
 import { EnquiryProvider } from "./enquiry";
-import { Footer, Header, Tray, Unwrap } from "./ui";
+import { Opening } from "./opening";
 import { About, Contact, EnquiryPage, Home, Privacy, Shop, Terms } from "./pages";
+import { Bag, Footer, Header } from "./ui";
 
 export default function App() {
   return (
     <BrowserRouter basename="/giftwale">
       <EnquiryProvider>
         <GiftCursor />
-        <Unwrap />
+        <Opening />
         <Header />
         <main>
           <Routes>
@@ -23,7 +24,7 @@ export default function App() {
           </Routes>
         </main>
         <Footer />
-        <Tray />
+        <Bag />
       </EnquiryProvider>
     </BrowserRouter>
   );
