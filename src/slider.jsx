@@ -26,7 +26,7 @@ const SLIDES = [
     eyebrow: "Shop",
     title: COPY.handcrafted,
     text: COPY.elegant,
-    image: img("asset-10.jpg"),
+    image: img("asset-02.png"),
     cta: { to: "/shop", label: "Shop" },
   },
 ];
