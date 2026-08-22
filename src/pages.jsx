@@ -15,31 +15,22 @@ export function Home() {
 
   return (
     <>
-      <section className="hero">
+      <section className="home-search">
         <div className="wrap">
-          <div className="hero-stage">
-            <img src={`${import.meta.env.BASE_URL}images/asset-16.png`} alt="Premium gift exchange" />
-            <div className="hero-veil" />
-            <div className="hero-copy">
-              <div className="kicker">{BRAND.tagline}</div>
-              <h1>{BRAND.slogan}</h1>
-              <p>{COPY.elegant}</p>
-              <form
-                className="search-bar"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  nav(`/shop?q=${encodeURIComponent(q)}`);
-                }}
-              >
-                <input
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder="Search Your gift here"
-                />
-                <button className="enquiry-pill" type="submit">Search</button>
-              </form>
-            </div>
-          </div>
+          <form
+            className="search-bar"
+            onSubmit={(e) => {
+              e.preventDefault();
+              nav(`/shop?q=${encodeURIComponent(q)}`);
+            }}
+          >
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search Your gift here"
+            />
+            <button className="enquiry-pill" type="submit">Search</button>
+          </form>
         </div>
       </section>
       <div className="marquee">

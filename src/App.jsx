@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { GiftCursor } from "./cursor";
 import { EnquiryProvider } from "./enquiry";
 import { Footer, Header, Tray, Unwrap } from "./ui";
 import { About, Contact, EnquiryPage, Home, Privacy, Shop, Terms } from "./pages";
@@ -7,6 +8,7 @@ export default function App() {
   return (
     <BrowserRouter basename="/giftwale">
       <EnquiryProvider>
+        <GiftCursor />
         <Unwrap />
         <Header />
         <main>

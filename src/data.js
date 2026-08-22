@@ -30,6 +30,49 @@ export const COPY = {
     "Discover handcrafted gift collections perfect for birthdays, weddings, and corporate occasions.",
 };
 
+export const SLIDES = [
+  {
+    id: "welcome",
+    stamp: "01",
+    kicker: "Storefront window",
+    title: "Celebrate every moment with the perfect gift",
+    text: COPY.elegant,
+    image: img("asset-16.png"),
+    href: "/shop",
+    action: "Browse the gifts",
+  },
+  {
+    id: "birthday",
+    stamp: "02",
+    kicker: "Birthday collection",
+    title: "A box that feels like the party started early",
+    text: COPY.handcrafted,
+    image: img("asset-10.jpg"),
+    href: "/shop?cat=birthday",
+    action: "Open birthday gifts",
+  },
+  {
+    id: "wedding",
+    stamp: "03",
+    kicker: "Wedding & return",
+    title: "Favours guests keep, not toss",
+    text: COPY.curated,
+    image: img("asset-13.png"),
+    href: "/shop?cat=wedding",
+    action: "See wedding pieces",
+  },
+  {
+    id: "corporate",
+    stamp: "04",
+    kicker: "Desk & wholesale",
+    title: "Branded sets, Moq 30, confirmed by phone",
+    text: COPY.elegant,
+    image: img("asset-02.png"),
+    href: "/shop?cat=corporate",
+    action: "Ask for a corporate set",
+  },
+];
+
 export const CATEGORIES = [
   { id: "birthday", label: "Birthday Gift" },
   { id: "wedding", label: "Wedding Gift" },

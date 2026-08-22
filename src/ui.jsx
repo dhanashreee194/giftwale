@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { BRAND } from "./data";
 import { useEnquiry } from "./enquiry";
+import { HeaderSlider } from "./slider";
 
 export function Logo() {
   return (
@@ -21,6 +22,7 @@ export function Header() {
 
   return (
     <header className="site-header">
+      <div className="mast">
       <div className="wrap">
         <div className="utility">
           <NavLink to="/">Home</NavLink>
@@ -59,6 +61,8 @@ export function Header() {
           </div>
         )}
       </div>
+      </div>
+      <HeaderSlider />
     </header>
   );
 }
@@ -98,9 +102,14 @@ export function ProductCard({ product }) {
   const { add } = useEnquiry();
   return (
     <article className="card">
-      <div className="card-media">
-        <span className="tag">{product.tags[0]}</span>
-        <img src={product.image} alt={product.name} />
+      <div className="card-box">
+        <div className="card-lid" aria-hidden>
+          <span />
+        </div>
+        <div className="card-media">
+          <span className="tag">{product.tags[0]}</span>
+          <img src={product.image} alt={product.name} />
+        </div>
       </div>
       <div className="card-body">
         <h3>{product.name}</h3>
