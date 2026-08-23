@@ -94,6 +94,7 @@ export function GiftTile({ product, index, onOpen, variant = "tile" }) {
 }
 
 export function ShopCard({ product, index, onOpen }) {
+  const { add } = useEnquiry();
   const cat = CATEGORIES.find((c) => c.id === product.category);
   return (
     <motion.article
@@ -104,18 +105,22 @@ export function ShopCard({ product, index, onOpen }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-8%" }}
       transition={{ duration: 0.4, delay: (index % 3) * 0.04, ease: [0.22, 1, 0.36, 1] }}
-      onClick={() => onOpen(product)}
     >
-      <div className="shop-card-visual">
-        <img src={product.image} alt={product.name} loading="lazy" />
-      </div>
-      <div className="shop-card-copy">
+      <button type="button" className="shop-card-visual" onClick={() => onOpen(product)}>
         <small>{cat?.label || product.tags[0]}</small>
+        <img src={product.image} alt={product.name} loading="lazy" />
+      </button>
+      <div className="shop-card-copy">
         <strong>{product.name}</strong>
         <p>{product.blurb}</p>
-        <span className="shop-card-cta">
-          View Details <i>→</i>
-        </span>
+        <button
+          type="button"
+          className="shop-card-enquiry"
+          data-cursor="bag"
+          onClick={(event) => add(product, 1, { x: event.clientX, y: event.clientY })}
+        >
+          Enquiry
+        </button>
       </div>
     </motion.article>
   );
