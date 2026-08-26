@@ -1041,35 +1041,43 @@ main { padding-top: 78px; }
 
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px 22px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
   margin-top: 32px;
+  align-items: stretch;
 }
 
 .shop-card {
+  --shot: 260px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  height: 100%;
   background: #ffffff;
-  border-radius: 28px;
+  border-radius: 24px;
   box-shadow: 0 16px 40px rgba(16, 42, 67, 0.08);
   overflow: hidden;
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .shop-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   box-shadow: 0 24px 48px rgba(16, 42, 67, 0.14);
 }
 
 .shop-card-visual {
   position: relative;
-  display: block;
+  flex: 0 0 var(--shot);
   width: 100%;
-  aspect-ratio: 1;
-  padding: 18px;
+  height: var(--shot);
+  min-height: var(--shot);
+  max-height: var(--shot);
+  margin: 0;
+  padding: 0;
   border: 0;
-  background: #f4eee3;
-  text-align: left;
+  overflow: hidden;
+  background: #f5f0e7;
+  cursor: pointer;
 }
 
 .shop-card-visual small {
@@ -1084,50 +1092,66 @@ main { padding-top: 78px; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   font-size: 10px;
+  line-height: 1;
 }
 
 .shop-card-visual img {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
+  max-width: none;
+  max-height: none;
+  padding: 14px;
   object-fit: contain;
   object-position: center;
-  transition: transform 0.5s ease;
+  pointer-events: none;
+  transition: transform 0.45s ease;
 }
 
-.shop-card:hover .shop-card-visual img { transform: scale(1.06); }
+.shop-card:hover .shop-card-visual img { transform: scale(1.03); }
 
 .shop-card-copy {
   display: flex;
-  flex: 1;
+  flex: 0 0 auto;
   flex-direction: column;
-  gap: 10px;
-  padding: 18px 20px 22px;
+  gap: 8px;
+  padding: 14px 18px 16px;
 }
 
 .shop-card-copy strong {
+  display: -webkit-box;
+  flex: 0 0 44px;
+  height: 44px;
   font-family: var(--serif);
-  font-size: clamp(18px, 1.6vw, 24px);
+  font-size: clamp(16px, 1.4vw, 20px);
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 22px;
   color: #102a43;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .shop-card-copy p {
   margin: 0;
+  flex: 0 0 38px;
+  height: 38px;
   color: var(--muted);
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: 13px;
+  line-height: 19px;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .shop-card-enquiry {
-  margin-top: auto;
+  margin-top: 4px;
   align-self: flex-start;
-  min-height: 42px;
-  padding: 0 20px;
+  min-height: 40px;
+  padding: 0 18px;
   border: 0;
   border-radius: 999px;
   background: linear-gradient(120deg, #1f8a86, #176f6c);
@@ -1747,6 +1771,16 @@ main { padding-top: 78px; }
   100% { transform: scale(1); }
 }
 
+@media (max-width: 1024px) {
+  .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shop-card { --shot: 220px; }
+}
+
+@media (max-width: 640px) {
+  .shop-grid { grid-template-columns: minmax(0, 1fr); }
+  .shop-card { --shot: 200px; }
+}
+
 @media (max-width: 900px) {
   .nav { display: none; }
   .menu-toggle { display: inline; }
@@ -1755,16 +1789,15 @@ main { padding-top: 78px; }
   }
   .shop-intro { min-height: auto; }
   .shop-intro { grid-template-columns: 1fr; }
-  .shop-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
   .shop-intro h1 { max-width: none; }
+  .shop-grid { gap: 16px; }
+  .shop-card-copy { padding: 12px 12px 14px; }
   .shop-hero-shot {
     position: relative;
     width: min(320px, 70%);
     margin: 16px 0 0 auto;
     mask-image: none;
   }
-  .shop-card-visual { padding: 12px; }
-  .shop-card-copy { padding: 12px 12px 14px; }
   .spread-shot.is-primary { min-height: 320px; }
   .spread-shot.is-secondary { min-height: 240px; margin-bottom: 0; }
   .catalogue { grid-template-columns: 1fr; gap: 8px; }
@@ -1803,10 +1836,6 @@ main { padding-top: 78px; }
   .gift-bag span { display: none; }
   .footer-end { flex-direction: column; gap: 12px; align-items: start; }
   .collection-grid { grid-auto-rows: 240px; }
-}
-
-@media (max-width: 560px) {
-  .shop-grid { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

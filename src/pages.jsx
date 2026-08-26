@@ -35,7 +35,7 @@ export function Home() {
           <Link className="text-link" data-cursor="cta" to="/shop">Shop</Link>
         </div>
         <div className="wrap shop-wide">
-          <GiftGallery products={PRODUCTS} layout="shop" />
+          <GiftGallery products={PRODUCTS.slice(0, 12)} layout="shop" />
         </div>
       </section>
       <section className="section branding" id="services">
@@ -201,6 +201,16 @@ export function EnquiryForm({ title = "Contact Us", compact = false }) {
     note: items.map((i) => i.note).filter(Boolean).join(" · "),
   });
 
+  useEffect(() => {
+    if (!items.length) return;
+    setForm((current) => ({
+      ...current,
+      product: items.map((item) => `${item.name} x${item.qty}`).join(", "),
+      qty: items.reduce((n, item) => n + item.qty, 0) || BRAND.moq,
+      note: items.map((item) => item.note).filter(Boolean).join(" · ") || current.note,
+    }));
+  }, [items]);
+
   function set(key, value) {
     setForm((f) => ({ ...f, [key]: value }));
   }
@@ -279,6 +289,10 @@ export function Contact() {
 }
 
 export function EnquiryPage() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <section className="section form-page">
       <div className="wrap">

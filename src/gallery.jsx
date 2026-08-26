@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CATEGORIES, tileSize } from "./data";
 import { useEnquiry } from "./enquiry";
 
@@ -14,6 +15,7 @@ export function filterGifts(list, cat, q) {
 
 export function GiftReveal({ product, onClose }) {
   const { add } = useEnquiry();
+  const navigate = useNavigate();
   const [qty, setQty] = useState(1);
   const [note, setNote] = useState("");
   if (!product) return null;
@@ -50,6 +52,7 @@ export function GiftReveal({ product, onClose }) {
               onClick={(event) => {
                 add({ ...product, note }, qty, { x: event.clientX, y: event.clientY });
                 onClose();
+                navigate("/enquiry");
               }}
             >
               Enquiry
@@ -95,6 +98,7 @@ export function GiftTile({ product, index, onOpen, variant = "tile" }) {
 
 export function ShopCard({ product, index, onOpen }) {
   const { add } = useEnquiry();
+  const navigate = useNavigate();
   const cat = CATEGORIES.find((c) => c.id === product.category);
   return (
     <motion.article
@@ -106,10 +110,21 @@ export function ShopCard({ product, index, onOpen }) {
       viewport={{ once: true, margin: "-8%" }}
       transition={{ duration: 0.4, delay: (index % 3) * 0.04, ease: [0.22, 1, 0.36, 1] }}
     >
-      <button type="button" className="shop-card-visual" onClick={() => onOpen(product)}>
+      <div
+        className="shop-card-visual"
+        role="button"
+        tabIndex={0}
+        onClick={() => onOpen(product)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            onOpen(product);
+          }
+        }}
+      >
         <small>{cat?.label || product.tags[0]}</small>
         <img src={product.image} alt={product.name} loading="lazy" />
-      </button>
+      </div>
       <div className="shop-card-copy">
         <strong>{product.name}</strong>
         <p>{product.blurb}</p>
@@ -117,7 +132,10 @@ export function ShopCard({ product, index, onOpen }) {
           type="button"
           className="shop-card-enquiry"
           data-cursor="bag"
-          onClick={(event) => add(product, 1, { x: event.clientX, y: event.clientY })}
+          onClick={(event) => {
+            add(product, 1, { x: event.clientX, y: event.clientY });
+            navigate("/enquiry");
+          }}
         >
           Enquiry
         </button>
@@ -133,15 +151,13 @@ export function GiftGallery({ products, cat = "all", query = "", layout = "mason
   return (
     <>
       <div className={layout === "shop" ? "shop-grid" : "gallery"}>
-        <AnimatePresence mode="popLayout">
-          {list.map((product, index) =>
-            layout === "shop" ? (
-              <ShopCard key={product.id} product={product} index={index} onOpen={setActive} />
-            ) : (
-              <GiftTile key={product.id} product={product} index={index} onOpen={setActive} />
-            )
-          )}
-        </AnimatePresence>
+        {list.map((product, index) =>
+          layout === "shop" ? (
+            <ShopCard key={product.id} product={product} index={index} onOpen={setActive} />
+          ) : (
+            <GiftTile key={product.id} product={product} index={index} onOpen={setActive} />
+          )
+        )}
       </div>
       {list.length === 0 && <p className="empty-gifts">No pieces in this range yet. Try another category.</p>}
       <AnimatePresence>{active && <GiftReveal product={active} onClose={() => setActive(null)} />}</AnimatePresence>
