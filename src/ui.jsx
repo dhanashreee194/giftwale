@@ -4,11 +4,18 @@ import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { BRAND, CATEGORIES, SEARCH_HINTS } from "./data";
 import { useEnquiry } from "./enquiry";
 
-export function Logo({ compact = false }) {
+export function Logo({ compact = false, lockup = false }) {
+  if (lockup) {
+    return (
+      <Link to="/" className="brand is-lockup" aria-label="Giftwale home">
+        <img className="brand-logo" src={BRAND.logo} alt="Giftwale — Creating Memories" />
+      </Link>
+    );
+  }
   return (
-    <Link to="/" className={`brand ${compact ? "is-compact" : ""}`}>
+    <Link to="/" className={`brand ${compact ? "is-compact" : ""}`} aria-label="Giftwale home">
       <span className="brand-mark">
-        <img src={`${import.meta.env.BASE_URL}images/asset-15.png`} alt="Giftwale logo" />
+        <img src={BRAND.mark} alt="" />
       </span>
       <div className="brand-copy">
         <strong>{BRAND.name}</strong>
@@ -125,7 +132,7 @@ export function Footer() {
       <div className="footer-ribbon" aria-hidden />
       <div className="wrap footer-grid">
         <div>
-          <Logo />
+          <Logo lockup />
           <p>{BRAND.slogan}</p>
         </div>
         <div>

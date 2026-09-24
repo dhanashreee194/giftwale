@@ -40,25 +40,7 @@ export function Opening() {
               {Array.from({ length: 8 }).map((_, i) => <i key={i} />)}
             </div>
             <div className="opening-glow" />
-            <div className="opening-box">
-              <div className="opening-lid">
-                <img src={`${import.meta.env.BASE_URL}images/asset-15.png`} alt="" />
-              </div>
-              <div className="opening-body">
-                <strong>{BRAND.name}</strong>
-                <span>{BRAND.tagline}</span>
-              </div>
-              <span className="opening-ribbon-v" />
-              <span className="opening-ribbon-h" />
-              <span className="opening-bow" />
-            </div>
-            <div className="opening-bits" aria-hidden>
-              <i />
-              <i />
-              <i />
-              <i />
-              <i />
-            </div>
+            <img className="opening-logo" src={BRAND.logo} alt="Giftwale" />
           </div>
         </motion.div>
       )}

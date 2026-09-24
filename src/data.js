@@ -5,6 +5,8 @@ export const BRAND = {
   name: "Giftwale",
   tagline: "CREATING MEMORIES",
   slogan: "Celebrate Every Moment with the Perfect Gift!",
+  logo: img("logo.png"),
+  mark: img("logo-mark.png"),
   phoneDisplay: "91- 70702 46161",
   phone: "917070246161",
   email: "temp@gmail.com",
