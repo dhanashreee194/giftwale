@@ -668,7 +668,7 @@ main { padding-top: 88px; }
 
 .needs { background: linear-gradient(180deg, rgba(246, 241, 232, 0.4), rgba(238, 243, 242, 0.7)); }
 
-.need-grid.is-four { grid-template-columns: repeat(4, 1fr); }
+.need-grid.is-four { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 
 .need-grid, .need-row {
   display: grid;
